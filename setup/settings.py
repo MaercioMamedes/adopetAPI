@@ -80,8 +80,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'adopetDB',
-        'USER': 'postegres',
-        'PASSWORD': 'postegres',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'localhost',
     }
 }
 
