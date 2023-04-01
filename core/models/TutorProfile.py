@@ -8,3 +8,6 @@ class TutorProfile(models.Model):
     phone = models.CharField('telefone', max_length=13)
     city = models.CharField('cidade', max_length=50)
     about = models.TextField('Sobre')
+
+    def __str__(self) -> str:
+        return self.user.first_name
