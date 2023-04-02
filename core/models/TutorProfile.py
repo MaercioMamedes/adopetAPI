@@ -10,4 +10,4 @@ class TutorProfile(models.Model):
     about = models.TextField('Sobre')
 
     def __str__(self) -> str:
-        return self.user.first_name
+        return f'{self.user.first_name} {self.user.last_name}'
