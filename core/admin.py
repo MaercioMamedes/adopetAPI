@@ -5,4 +5,5 @@ from core.models import TutorProfile
 
 @admin.register(TutorProfile)
 class TutorAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'fullname')
+    list_display_links = ('id', 'fullname')
