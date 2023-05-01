@@ -4,6 +4,8 @@ from rest_framework.response import Response
 
 class TutorViewSet(viewsets.ViewSet):
 
+    http_method_names = ['get', 'post', 'put', 'patch', 'delete']
+
     def get_queryset(self):
         return TutorProfile.objects.get(pk=self.kwargs['pk'])
 
@@ -31,7 +33,18 @@ class TutorViewSet(viewsets.ViewSet):
         pass
 
     def retrieve(self, request, pk=None):
-        pass
+        
+        tutor = TutorProfile.objects.get(pk=pk)
+                
+        return Response(
+            {
+                "fullname": tutor.fullname,
+                "email": tutor.user.email,
+                "phone": tutor.phone,
+                "city": tutor.city,
+                "about":tutor.about,
+            }
+        )
 
     def update(self, request, pk=None):
         pass
@@ -40,4 +53,13 @@ class TutorViewSet(viewsets.ViewSet):
         pass
 
     def destroy(self, request, pk=None):
-        pass
+        print("passsou aqui")
+
+        tutor = TutorProfile.objects.get(pk=pk)
+
+        tutor.user.delete()
+        tutor.delete()
+        print('pronto')
+
+        
+        return Response('foir')
