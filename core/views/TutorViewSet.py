@@ -1,5 +1,7 @@
 from rest_framework import viewsets
 from core.models import TutorProfile
+from core.serializers import TutorSerializer
+from django.contrib.auth.models import User
 from rest_framework.response import Response
 
 class TutorViewSet(viewsets.ViewSet):
@@ -8,10 +10,13 @@ class TutorViewSet(viewsets.ViewSet):
 
     def get_queryset(self):
         return TutorProfile.objects.get(pk=self.kwargs['pk'])
+    
+    def get_serializer(self, **kwargs):
+        return TutorSerializer
 
     def list(self, request):
 
-        queryset = queryset = TutorProfile.objects.all()
+        queryset = TutorProfile.objects.all()
 
         """Formatação da lista de tutores"""
 
@@ -30,7 +35,43 @@ class TutorViewSet(viewsets.ViewSet):
 
 
     def create(self, request):
-        pass
+            
+        serializer_data = TutorSerializer(data=request.data)
+
+        if serializer_data.is_valid(raise_exception=True):
+
+            fullname = serializer_data.validated_data['fullname']
+            email = serializer_data.validated_data['email']
+            password = serializer_data.validated_data['password']
+
+
+            """Criando usuário para aplicação"""
+
+            user = User.objects.create_user(
+                first_name = fullname.split()[0],
+                last_name = fullname.split()[-1],
+                username=email,
+                email=email,
+            )
+
+            user.set_password(password)
+
+            user.save()
+
+            """Criando perfil de Tutor"""
+
+            tutor = TutorProfile.objects.create(
+                user=user,
+                fullname=fullname,
+            )
+
+
+            
+            return Response({
+                'fullname': tutor.fullname,
+                'email':tutor.user.email,
+            },
+            status=200)
 
     def retrieve(self, request, pk=None):
         

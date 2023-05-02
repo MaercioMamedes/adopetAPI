@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 
 
+
 class TutorSerializer(serializers.Serializer):
     
     fullname = serializers.CharField(max_length=50)
