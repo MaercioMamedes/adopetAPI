@@ -4,6 +4,7 @@ from core.serializers import TutorSerializer, TutorUpdateSerializer
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
+from core.helpers import delete_image
 
 
 class TutorViewSet(viewsets.ViewSet):
@@ -83,6 +84,7 @@ class TutorViewSet(viewsets.ViewSet):
                 "phone": tutor.phone,
                 "city": tutor.city,
                 "about":tutor.about,
+                "image":tutor.image.path if tutor.image else "",
             }
         )
 
@@ -102,12 +104,13 @@ class TutorViewSet(viewsets.ViewSet):
                 'email',
                 'phone',
                 'city',
-                'about'
+                'about',
+                'image',
             )
 
             for field in serializers_fields:
                 if field not in serializer.validated_data.keys():
-                    return Response('Dados incompletos, para atualização parcial utilize o método PATCH', status=400)
+                    return Response(f'Dados incompletos, faltando o campo [{field}], para atualização parcial utilize o método PATCH', status=400)
             
 
             for attr in serializer.validated_data.keys():
@@ -122,6 +125,7 @@ class TutorViewSet(viewsets.ViewSet):
         """Método HTTP para atualização parcial de recurso"""
 
         serializer = TutorUpdateSerializer(data=request.data)
+        print(serializer)
 
         if serializer.is_valid(raise_exception=True):
 
@@ -139,6 +143,7 @@ class TutorViewSet(viewsets.ViewSet):
         """Método para excluir um tutor"""
 
         tutor = self.get_object(pk)
+        delete_image(tutor.image.path)
         tutor.user.delete()
         tutor.delete()
         return Response('Usuário excluído com sucesso')
@@ -171,6 +176,12 @@ class TutorViewSet(viewsets.ViewSet):
 
             if 'about' in data.keys():
                 tutor.about = data['about']
+                tutor.save()
+
+            if 'image' in data.keys():
+                if tutor.image:
+                    delete_image(tutor.image.path)
+                tutor.image = data['image']
                 tutor.save()
             
             return tutor

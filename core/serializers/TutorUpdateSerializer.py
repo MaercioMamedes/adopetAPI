@@ -9,5 +9,6 @@ class TutorUpdateSerializer(serializers.Serializer):
     phone = serializers.CharField(max_length=13, required=False)
     city = serializers.CharField(max_length=50, required=False)
     about = serializers.CharField(required=False)
+    image = serializers.ImageField(required=False)
 
 
