@@ -4,6 +4,7 @@ from core.serializers import TutorSerializer, TutorUpdateSerializer
 from django.contrib.auth.models import User
 from rest_framework.response import Response
 
+
 class TutorViewSet(viewsets.ViewSet):
 
     http_method_names = ['get', 'post', 'put', 'patch', 'delete']
@@ -21,7 +22,9 @@ class TutorViewSet(viewsets.ViewSet):
         """Formatação da lista de tutores"""
 
         tutor_list = [
-            {
+
+            {   
+                'id_tutor': tutor.id,
                 'fullname': tutor.fullname,
                 'email': tutor.user.email,
                 'phone': tutor.phone,
@@ -79,6 +82,7 @@ class TutorViewSet(viewsets.ViewSet):
                 
         return Response(
             {
+                "id_tutor": tutor.id,
                 "fullname": tutor.fullname,
                 "email": tutor.user.email,
                 "phone": tutor.phone,
@@ -146,10 +150,8 @@ class TutorViewSet(viewsets.ViewSet):
 
         tutor.user.delete()
         tutor.delete()
-        print('pronto')
 
-        
-        return Response('foir')
+        return Response('Usuário excluído com sucesso')
     
     
     def _update_tutor(self, tutor, data):
