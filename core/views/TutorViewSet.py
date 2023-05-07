@@ -143,7 +143,8 @@ class TutorViewSet(viewsets.ViewSet):
         """Método para excluir um tutor"""
 
         tutor = self.get_object(pk)
-        delete_image(tutor.image.path)
+        if tutor.image:
+            delete_image(tutor.image.path)
         tutor.user.delete()
         tutor.delete()
         return Response('Usuário excluído com sucesso')
